@@ -1,0 +1,7 @@
+streamlit
+pillow
+deepface
+pandas
+scikit-image
+opencv-python
+mediapipe
