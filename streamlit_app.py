@@ -93,7 +93,7 @@ def Zangle(image, start,end,k):
 
     zangle_list.append(findAngle(start,end))
    
-# for finding chin ratio
+# for finding chin ratio and lip ratio
 
 chin_ratio2=[]
 def chin_ratio1(a,b,c):
@@ -668,9 +668,10 @@ elif app_mode == "Project Demo":
             image_2 = cv2.cvtColor(image_2, cv2.COLOR_GRAY2RGB)
 
     # option select dropdown for implementing the image results
+    #options_selected = st.sidebar.multiselect('Which result you want to get', [
+    #                                          "Keypoints", "Characteristics", "Distance", "Angle", "Mouth Position", "Eyes Position", "Head Position", "Face Position", "New Results", "Distance Labels","z angle"])
     options_selected = st.sidebar.multiselect('Which result you want to get', [
-                                              "Keypoints", "Characteristics", "Distance", "Angle", "Mouth Position", "Eyes Position", "Head Position", "Face Position", "New Results", "Distance Labels","z angle"])
-
+                                              "Keypoints", "z angle"])
     # declearing the two columns of the complete screen
     cols = st.columns(2)
 
@@ -707,20 +708,22 @@ elif app_mode == "Project Demo":
             if "Keypoints" in options_selected:
                 col[0].image(keypoints, caption='Image 1 with Keypoints')
 
-            # showing the image with characteristics
-            if "Characteristics" in options_selected:
-                col[0].image(clone, caption="Characteristics of image 1")
+            # # showing the image with characteristics
+            # if "Characteristics" in options_selected:
+            #     col[0].image(clone, caption="Characteristics of image 1")
 
-            # showing the distance graph
-            if "Distance" in options_selected:
-                st.subheader("The distance between key points in image 1")
-                st.write("All the distances are in pixel")
-                df = pd.DataFrame(distance_dict, index=["distance"])
-                csv=df.to_csv('results_1.csv', mode='a')
-                df = df.T
-                st.area_chart(df)
-                csv = df.to_csv(index=False)
-            
+            # # showing the distance graph
+            # if "Distance" in options_selected:
+            #     st.subheader("The distance between key points in image 1")
+            #     st.write("All the distances are in pixel")
+            #     df = pd.DataFrame(distance_dict, index=["distance"])
+            #     csv=df.to_csv('results_1.csv', mode='a')
+            #     df = df.T
+            #     st.area_chart(df)
+            #     csv = df.to_csv(index=False)
+
+            #showing z angle
+    
             if "z angle" in options_selected:
                 st.write("All the angles are in degree")      
                 st.write("Z angle is the angle between RED LINES")  
@@ -731,45 +734,45 @@ elif app_mode == "Project Demo":
                 st.write("BLACK LINE is the line between subnasal point and center of head")    
                 st.write("the ratio of distance between perpendicular from pupil to chin and perpendicular lines is", chin_ratio2[0])
                 st.write("the ratio of distance between perpendicular from pupil to chin and perpendicular from pupil and lower lip is", chin_ratio2[1])
-            # showing the angle graph
-            if "Angle" in options_selected:
-                st.subheader("The important angles of image 1")
-                st.write("All the angles are in degree")
-                df = pd.DataFrame(angle_dict, index=["angle"])
-                df.to_csv('results_1.csv', mode='a')
-                df = df.T
-                st.area_chart(df)
+            # # showing the angle graph
+            # if "Angle" in options_selected:
+            #     st.subheader("The important angles of image 1")
+            #     st.write("All the angles are in degree")
+            #     df = pd.DataFrame(angle_dict, index=["angle"])
+            #     df.to_csv('results_1.csv', mode='a')
+            #     df = df.T
+            #     st.area_chart(df)
 
-            # results for mouth opening
-            if ("Mouth Position" in options_selected) and image_2 is None:
-                st.subheader(
-                    "Please upload the second image also, for getting results.")
+            # # results for mouth opening
+            # if ("Mouth Position" in options_selected) and image_2 is None:
+            #     st.subheader(
+            #         "Please upload the second image also, for getting results.")
 
-            # results for eye position
-            if ("Eyes Position" in options_selected) and image_2 is None:
-                st.subheader(
-                    "Please upload the second image also, for getting results.")
+            # # results for eye position
+            # if ("Eyes Position" in options_selected) and image_2 is None:
+            #     st.subheader(
+            #         "Please upload the second image also, for getting results.")
 
-            # results for head position
-            if ("Head Position" in options_selected) and image_2 is None:
-                st.subheader(
-                    "Please upload the second image also, for getting results.")
+            # # results for head position
+            # if ("Head Position" in options_selected) and image_2 is None:
+            #     st.subheader(
+            #         "Please upload the second image also, for getting results.")
 
-            # results for face position
-            if ("Face Position" in options_selected) and image_2 is None:
-                st.subheader(
-                    "Please upload the second image also, for getting results.")
+            # # results for face position
+            # if ("Face Position" in options_selected) and image_2 is None:
+            #     st.subheader(
+            #         "Please upload the second image also, for getting results.")
 
-            # showing the new distance graph
-            if "New Results" in options_selected:
-                st.subheader("The new distances in image 1")
-                st.write("All the distances are in pixel")
-                df = pd.DataFrame(new_distance_dict, index=["distance"])
-                df.to_csv('results_1.csv', mode='a')
-                df = df.T
-                st.area_chart(df)
-            if "Distance Labels" in options_selected:
-                col[0].image(distance_mapping, caption="Distance of image 1")
+            # # showing the new distance graph
+            # if "New Results" in options_selected:
+            #     st.subheader("The new distances in image 1")
+            #     st.write("All the distances are in pixel")
+            #     df = pd.DataFrame(new_distance_dict, index=["distance"])
+            #     df.to_csv('results_1.csv', mode='a')
+            #     df = df.T
+            #     st.area_chart(df)
+            # if "Distance Labels" in options_selected:
+            #     col[0].image(distance_mapping, caption="Distance of image 1")
 
         # if no face is detected then show the error
         else:
@@ -792,105 +795,105 @@ elif app_mode == "Project Demo":
             if "Keypoints" in options_selected:
                 col[1].image(keypoints, caption='Image 2 with Keypoints')
 
-            # showing the characteristics
-            if "Characteristics" in options_selected:
-                col[1].image(clone, caption="Characteristics of image 2")
+            # # showing the characteristics
+            # if "Characteristics" in options_selected:
+            #     col[1].image(clone, caption="Characteristics of image 2")
 
-            # showing the distance graph
-            if "Distance" in options_selected:
-                st.subheader("The distance between key points of image 2")
-                st.write("All the distances are in pixel")
-                df = pd.DataFrame(distance_dict_1, index=["distance"])
-                df = df.T
-                st.area_chart(df)
+            # # showing the distance graph
+            # if "Distance" in options_selected:
+            #     st.subheader("The distance between key points of image 2")
+            #     st.write("All the distances are in pixel")
+            #     df = pd.DataFrame(distance_dict_1, index=["distance"])
+            #     df = df.T
+            #     st.area_chart(df)
 
-            # showing the angle graph
-            if "Angle" in options_selected:
-                st.subheader("The important angles of image 2")
-                st.write("All the angles are in degree")
-                df = pd.DataFrame(angle_dict, index=["angle"])
-                df = df.T
-                st.area_chart(df)
+            # # showing the angle graph
+            # if "Angle" in options_selected:
+            #     st.subheader("The important angles of image 2")
+            #     st.write("All the angles are in degree")
+            #     df = pd.DataFrame(angle_dict, index=["angle"])
+            #     df = df.T
+            #     st.area_chart(df)
 
             # results for mouth opening
-            if "Mouth Position" in options_selected and image_1 is not None:
-                if ((distance_dict["lip_to_lip_distance"]) < (distance_dict_1["lip_to_lip_distance"])):
-                    st.subheader(
-                        "Mouth is open in second image with respect to image 1")
-                elif((distance_dict["lip_to_lip_distance"]) > (distance_dict_1["lip_to_lip_distance"])):
-                    st.subheader(
-                        "Mouth is closed in second image with respect to image 1")
-                else:
-                    st.subheader("Error 404: No changes found!")
+            # if "Mouth Position" in options_selected and image_1 is not None:
+            #     if ((distance_dict["lip_to_lip_distance"]) < (distance_dict_1["lip_to_lip_distance"])):
+            #         st.subheader(
+            #             "Mouth is open in second image with respect to image 1")
+            #     elif((distance_dict["lip_to_lip_distance"]) > (distance_dict_1["lip_to_lip_distance"])):
+            #         st.subheader(
+            #             "Mouth is closed in second image with respect to image 1")
+            #     else:
+            #         st.subheader("Error 404: No changes found!")
                     
 
-            # results for eye position
-            if "Eyes Position" in options_selected and image_1 is not None:
-                x = (distance_dict["righteye_to_righteye_distance"] +
-                     distance_dict["lefteye_to_lefteye_distance"])
-                y = distance_dict_1["righteye_to_righteye_distance"] + \
-                    distance_dict_1["lefteye_to_lefteye_distance"]
-                if (x < y):
-                    st.subheader(
-                        "Eyes are open in second image with respect to image 1")
-                else:
-                    st.subheader(
-                        "Eyes are closed in second image with respect to image 1")
+            # # results for eye position
+            # if "Eyes Position" in options_selected and image_1 is not None:
+            #     x = (distance_dict["righteye_to_righteye_distance"] +
+            #          distance_dict["lefteye_to_lefteye_distance"])
+            #     y = distance_dict_1["righteye_to_righteye_distance"] + \
+            #         distance_dict_1["lefteye_to_lefteye_distance"]
+            #     if (x < y):
+            #         st.subheader(
+            #             "Eyes are open in second image with respect to image 1")
+            #     else:
+            #         st.subheader(
+            #             "Eyes are closed in second image with respect to image 1")
 
-            # results for head position
-            if "Head Position" in options_selected and image_1 is not None:
-                a = (distance_dict["rightear_to_nose_distance"]
-                     ) / (distance_dict["leftear_to_nose_distance"])
-                b = (distance_dict_1["rightear_to_nose_distance"]
-                     ) / (distance_dict_1["leftear_to_nose_distance"])
+            # # results for head position
+            # if "Head Position" in options_selected and image_1 is not None:
+            #     a = (distance_dict["rightear_to_nose_distance"]
+            #          ) / (distance_dict["leftear_to_nose_distance"])
+            #     b = (distance_dict_1["rightear_to_nose_distance"]
+            #          ) / (distance_dict_1["leftear_to_nose_distance"])
 
-                if(b > a):
-                    st.subheader(
-                        "Face is turned to left in second image with respect to image 1")
-                elif(a > b):
-                    st.subheader(
-                        "Face is turned to right in second image with respect to image 1")
-                else:
-                    st.subheader(
-                        "The head is in same position in second image with respect to image 1")
+            #     if(b > a):
+            #         st.subheader(
+            #             "Face is turned to left in second image with respect to image 1")
+            #     elif(a > b):
+            #         st.subheader(
+            #             "Face is turned to right in second image with respect to image 1")
+            #     else:
+            #         st.subheader(
+            #             "The head is in same position in second image with respect to image 1")
 
-            # results for the face position
-            if "Face Position" in options_selected and image_1 is not None:
-                c = (distance_dict["head_distance"]) / \
-                    (distance_dict["bottomhead_distance"])
-                d = (distance_dict_1["head_distance"]) / \
-                    (distance_dict_1["bottomhead_distance"])
+            # # results for the face position
+            # if "Face Position" in options_selected and image_1 is not None:
+            #     c = (distance_dict["head_distance"]) / \
+            #         (distance_dict["bottomhead_distance"])
+            #     d = (distance_dict_1["head_distance"]) / \
+            #         (distance_dict_1["bottomhead_distance"])
 
-                if(c > d):
-                    st.subheader(
-                        "Face is upwards in second image with respect to image 1")
-                elif(d > c):
-                    st.subheader(
-                        "Face is downwards in second image with respect to image 1")
-                else:
-                    st.subheader(
-                        "The face is in same position in second image with respect to image 1")
+            #     if(c > d):
+            #         st.subheader(
+            #             "Face is upwards in second image with respect to image 1")
+            #     elif(d > c):
+            #         st.subheader(
+            #             "Face is downwards in second image with respect to image 1")
+            #     else:
+            #         st.subheader(
+            #             "The face is in same position in second image with respect to image 1")
 
-                if(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) > 6):
-                    st.subheader(
-                        "The Face has tilted to right in second image with respect to image 1")
-                elif(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) < -6):
-                    st.subheader(
-                        "The Face has tilted to left in second image with respect to image 1")
-                else:
-                    st.subheader(
-                        "No major change in the tilting of face in second image with respect to image 1")
+            #     if(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) > 6):
+            #         st.subheader(
+            #             "The Face has tilted to right in second image with respect to image 1")
+            #     elif(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) < -6):
+            #         st.subheader(
+            #             "The Face has tilted to left in second image with respect to image 1")
+            #     else:
+            #         st.subheader(
+            #             "No major change in the tilting of face in second image with respect to image 1")
 
-            # showing the new distance graph
-            if "New Results" in options_selected:
-                st.subheader("The new distances in image 2")
-                st.write("All the distances are in pixel")
-                df = pd.DataFrame(new_distance_dict_1, index=["distance"])
-                df = df.T
-                st.area_chart(df)
+            # # showing the new distance graph
+            # if "New Results" in options_selected:
+            #     st.subheader("The new distances in image 2")
+            #     st.write("All the distances are in pixel")
+            #     df = pd.DataFrame(new_distance_dict_1, index=["distance"])
+            #     df = df.T
+            #     st.area_chart(df)
 
-            if "Distance Mapping" in options_selected:
-                col[1].image(distance_mapping_1, caption='Distance Mapping')
+            # if "Distance Mapping" in options_selected:
+            #     col[1].image(distance_mapping_1, caption='Distance Mapping')
 
         # if no face is found in image 2 then show the error
         else:
