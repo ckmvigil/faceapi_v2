@@ -91,13 +91,36 @@ def Zangle(image, start,end,k):
          cv2.arrowedLine(image, start, end,(0,0,0), 2)
          cv2.arrowedLine(image, end, start,(0,0,0), 2)
 
-    zangle_list.append(findAngle(start,end))
+    zangle_list.append(round(findAngle(start,end),2))
    
 # for finding chin ratio and lip ratio
 
 chin_ratio2=[]
 def chin_ratio1(a,b,c):
-    chin_ratio2.append(abs(a[0]-b[0])/abs(a[0]-c[0]))
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)==0.50):
+        
+        chin_ratio2.append("-Tip of chin is at 1/2 times the distance between pupil perpendicular and head perpendicular line")
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)<0.50):
+        f="-Tip of chin lies at the left of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(0.50-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2),2))+" times the distance between the lines"
+    
+        chin_ratio2.append(f)
+
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)>0.50):
+        g="-Tip of chin lies at the right of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.50,2))+" times the distance between the lines"
+        chin_ratio2.append(g)
+
+def lip_ratio1(a,b,c):
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)==0.33):
+
+        chin_ratio2.append("-Lower lip line is at 1/3 times the distance between pupil perpendicular and head perpendicular line")
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)<0.33):
+        h="-Lower lip line lies at the left of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(0.33-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2))+" times the distance between the lines"
+        chin_ratio2.append(h)
+
+    if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)>0.33):
+        i="-Lower lip line lies at the right of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.33)+" times the distance between the lines"
+        chin_ratio2.append(i)
+
     
  
 # drawing the arrow
@@ -569,7 +592,7 @@ def main(image):
     bottom_lip = extractCoordinates(
         results, keypoints_mapping["upper_lip_to_lower_lip"][1])
     drawArrow(z_img,bottom_lip,[bottom_lip[0],chin[1]])
-    chin_ratio1([right_eye_3[0],chin[1]],chin,[bottom_lip[0],chin[1]])
+    lip_ratio1([right_eye_3[0],chin[1]],[bottom_lip[0],chin[1]],[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
     lip_to_lip_distance = findDistance(top_lip, bottom_lip)
     lip_to_lip_angle = findAngle(top_lip, bottom_lip)
     distance_dict["lip_to_lip_distance"] = lip_to_lip_distance
@@ -623,7 +646,7 @@ def main(image):
 # the side bar
 with st.sidebar:
     st.title('CKM VIGIL Face API')
-    st.subheader("Facial Landmark Detection")
+    st.subheader("Side face Detection")
     # choosing the app mode
     app_mode = st.selectbox("Please select from the following", [
                             "Company Info", "Project Demo", "Project Details"])
@@ -644,8 +667,8 @@ elif app_mode == "Project Demo":
     # images upload
     image_1 = st.file_uploader("Choose an Image 1", type=[
                                "jpg", "png", "jpeg"], key="image1")
-    image_2 = st.file_uploader("Choose an Image 2", type=[
-                               "jpg", "png", "jpeg"], key='image2')
+   # image_2 = st.file_uploader("Choose an Image 2", type=[
+                            #    "jpg", "png", "jpeg"], key='image2')
 
     # functions for image 1
     if image_1 is not None:
@@ -658,14 +681,14 @@ elif app_mode == "Project Demo":
             image_1 = cv2.cvtColor(image_1, cv2.COLOR_GRAY2RGB)
 
     # functions for image 2
-    if image_2 is not None:
-        image_2 = skimage.io.imread(image_2)
+    # if image_2 is not None:
+    #     image_2 = skimage.io.imread(image_2)
 
-        # optimizing the channels of the image to three channels
-        if image_2.shape[2] > 3:
-            image_2 = cv2.cvtColor(image_2, cv2.COLOR_RGBA2RGB)
-        if len(image_2.shape) == 2:
-            image_2 = cv2.cvtColor(image_2, cv2.COLOR_GRAY2RGB)
+    #     # optimizing the channels of the image to three channels
+    #     if image_2.shape[2] > 3:
+    #         image_2 = cv2.cvtColor(image_2, cv2.COLOR_RGBA2RGB)
+    #     if len(image_2.shape) == 2:
+    #         image_2 = cv2.cvtColor(image_2, cv2.COLOR_GRAY2RGB)
 
     # option select dropdown for implementing the image results
     #options_selected = st.sidebar.multiselect('Which result you want to get', [
@@ -678,9 +701,9 @@ elif app_mode == "Project Demo":
     if image_1 is not None:
         cols[0].subheader("Image 1")
         cols[0].image(image_1, caption='Original Image')
-    if image_2 is not None:
-        cols[1].subheader("Image 2")
-        cols[1].image(image_2, caption='Original Image')
+    # if image_2 is not None:
+    #     cols[1].subheader("Image 2")
+    #     cols[1].image(image_2, caption='Original Image')
     if len(options_selected) != 0:
         st.header("Results")
 
@@ -723,17 +746,35 @@ elif app_mode == "Project Demo":
             #     csv = df.to_csv(index=False)
 
             #showing z angle
-    
+            st.write("All the angles are in degree")
+            title1 = '<p style="font-family:Courier; color:Red;">-Z angle is the angle between RED LINES</p>'
+            title2 = '<p style="font-family:Courier; color:Green;">-GREEN LINES are the perpendicular lines from PUPIL, CENTER OF HEAD and LOWER LIP</p>'
+            title3 = '<p style="font-family:Courier; color:Gray;">-Z angle is :</p>'
+            title4 = '<p style="font-family:Courier; color:Blue;">-Angle between BLUE LINES is :</p>'
+            title5 = '<p style="font-family:Courier; color:Gray;">-BLACK LINE is the line between subnasal point and center of head</p>'
             if "z angle" in options_selected:
-                st.write("All the angles are in degree")      
-                st.write("Z angle is the angle between RED LINES")  
-                st.write("GREEN LINES are the perpendicular lines from PUPIL and CENTER OF HEAD")            
+                with st.expander("INFORMATION :",expanded=False):
+
+                    st.markdown(title1, unsafe_allow_html=True)
+                    st.markdown(title2, unsafe_allow_html=True)
+                    st.markdown(title3, unsafe_allow_html=True)
+                    st.info(str(round(zangle_list[4]-zangle_list[1],2)))
+                    st.markdown(title4, unsafe_allow_html=True)
+                    st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
+                    st.markdown(title5, unsafe_allow_html=True)
+                    st.text ((chin_ratio2[0]))
+                    st.text(chin_ratio2[1])
+                    
+                  
+                
+                #st.write("Z angle is the angle between RED LINES")  
+                #st.write("GREEN LINES are the perpendicular lines from PUPIL, CENTER OF HEAD and LOWER LIP")            
                 col[0].image(z_img, caption="Z angle of image 1")
-                st.write("z angle is",zangle_list[4]-zangle_list[1])
-                st.write("angle between BLUE LINES is ",zangle_list[2]-zangle_list[0]+180)
-                st.write("BLACK LINE is the line between subnasal point and center of head")    
-                st.write("the ratio of distance between perpendicular from pupil to chin and perpendicular lines is", chin_ratio2[0])
-                st.write("the ratio of distance between perpendicular from pupil to chin and perpendicular from pupil and lower lip is", chin_ratio2[1])
+                #st.write("z angle is",str(zangle_list[4]-zangle_list[1]))          
+                #st.write(" ",)
+                #st.write("")    
+                
+                #st.balloons()
             # # showing the angle graph
             # if "Angle" in options_selected:
             #     st.subheader("The important angles of image 1")
@@ -779,21 +820,21 @@ elif app_mode == "Project Demo":
             st.error("No face detected in image 1")
 
     # second image functions
-    if image_2 is not None:
+    # if image_2 is not None:
 
-        # getting the face detection results
-        with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5) as face_detection:
-            results = face_detection.process(image_2)
+    #     # getting the face detection results
+    #     with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5) as face_detection:
+    #         results = face_detection.process(image_2)
 
-        # if image 2 contains a face
-        if results.detections:
-            distance_dict_1, angle_dict_1, clone, z_img,  distance_mapping_1, keypoints, new_distance_dict_1 = main(
-                image_2)
-            emotion_image = image_2
+    #     # if image 2 contains a face
+    #     if results.detections:
+    #         distance_dict_1, angle_dict_1, clone, z_img,  distance_mapping_1, keypoints, new_distance_dict_1 = main(
+    #             image_2)
+    #         emotion_image = image_2
 
-            # showing the keypoints
-            if "Keypoints" in options_selected:
-                col[1].image(keypoints, caption='Image 2 with Keypoints')
+    #         # showing the keypoints
+    #         if "Keypoints" in options_selected:
+    #             col[1].image(keypoints, caption='Image 2 with Keypoints')
 
             # # showing the characteristics
             # if "Characteristics" in options_selected:
@@ -896,8 +937,8 @@ elif app_mode == "Project Demo":
             #     col[1].image(distance_mapping_1, caption='Distance Mapping')
 
         # if no face is found in image 2 then show the error
-        else:
-            st.error("No face detected in image 2")
+        # else:
+        #     st.error("No face detected in image 2")
 
 # project details page
 elif app_mode == "Project Details":
