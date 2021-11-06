@@ -1,4 +1,4 @@
-# Facial Detection API
+# Side face detection api
 ## CKM VIGIL PVT. LTD.
 
 ## 🌟**Target**
