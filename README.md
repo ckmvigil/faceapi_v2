@@ -28,6 +28,13 @@ We started with a [Mediapipe Facemesh](https://google.github.io/mediapipe/soluti
 
 - `def findAngle(start, end)`
 
+-`def chin_ratio1(a,b,c):`
+
+-`def lip_ratio1(a,b,c):`
+
+-`def drawCircle(image, location, i=1):`
+
+-`def Zangle(image, start,end,k):`
 <br>
 
 
