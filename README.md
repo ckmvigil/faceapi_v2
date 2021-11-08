@@ -25,16 +25,15 @@ We started with a [Mediapipe Facemesh](https://google.github.io/mediapipe/soluti
 
 - `def drawArrow(image, start, end)`
 
-
 - `def findAngle(start, end)`
 
--`def chin_ratio1(a,b,c):`
+- `def chin_ratio1(a,b,c):`
 
--`def lip_ratio1(a,b,c):`
+- `def lip_ratio1(a,b,c):`
 
--`def drawCircle(image, location, i=1):`
+- `def drawCircle(image, location, i=1):`
 
--`def Zangle(image, start,end,k):`
+- `def Zangle(image, start,end,k):`
 <br>
 
 
@@ -55,9 +54,12 @@ We started with a [Mediapipe Facemesh](https://google.github.io/mediapipe/soluti
 
 - image showing keypoints:
 
-  ![keypoints](https://github.com/ckmvigil/face-api-readme/blob/main/keypoints.jpeg)
+  ![keypoints]()
 <br/>
 
+- image showing side face results:
+
+ ![z angle]()
 
 ---
 
