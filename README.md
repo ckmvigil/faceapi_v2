@@ -94,7 +94,7 @@ We started with a [Mediapipe Facemesh](https://google.github.io/mediapipe/soluti
 ## :star2: **Live working**
 - The whole project is deployed at _Streamlit_ that turns data script to shareable web apps for python.
 
-- [Project demo](https://share.streamlit.io/ckmvigil/face-api/main)
+- [Project demo](https://share.streamlit.io/ckmvigil/faceapi_v2/main)
 ---
 
 ## :star2: **Contributors**
