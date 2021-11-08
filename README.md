@@ -42,7 +42,7 @@ We started with a [Mediapipe Facemesh](https://google.github.io/mediapipe/soluti
   
 - Sample image
   
-  ![exampleimg](https://github.com/ckmvigil/face-api-readme/blob/main/aaa.jpg)
+  ![exampleimg]()
 <br/>
 
 
