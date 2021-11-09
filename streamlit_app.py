@@ -13,16 +13,10 @@ import numpy as np
 imageSize = (1024, 1024)
 
 #dictinary for disatnce labels
-distance_label = {"jawContourLine2": 1,
-                  "jawContourLine3": 2, "ear_ear_distance": 3, "eye_eye_distance": 4, "eyebrow_chin_distance": 5,
-                  "mouth_distance": 6, "virtualline_distance": 7, "upperhead_distance": 8, "middlehead_distance": 9,
-                  "right_ear_nose_distance": 10, "left_ear_nose_distance": 11,"blue":12,"black":13,"red":14,"lime":15,"redd":16
-                  }
+distance_label = {"blue":1,"black":2,"red":3,"lime":4,"redd":5}
 
 #dictionary for colours                  
-colour_dict = {"1": (0, 0, 255), "2": (0, 128, 0), "3": (255, 255, 51), "4": (102, 51, 255), "5": (255,0,127),  
-"6": (0, 255, 128), "7": (0,0,0), "8":(102, 204, 51), "9": (255, 255, 255), "10": (153,0,153), "11":(255, 128, 0),"12": (0,0,255),"13":(0,0,0),"14":(128,0,0),"15":(0, 110, 0),"16":(128,0,0)
-               }
+colour_dict = {"1": (0,0,255),"2":(0,0,0),"3":(128,0,0),"4":(0, 110, 0),"5":(128,0,0)}
 
 
 # function for getting coordinates of the key point
@@ -292,30 +286,6 @@ def main(image):
     pts = np.array(pts)
     drawRedPolylines(clone, pts)
 
-    # jawContour Line 2
-    jawContourLine2Point1 = extractCoordinates(
-        results, keypoints_mapping["jawContourLine2"][0])
-    jawContourLine2Point2 = extractCoordinates(
-        results, keypoints_mapping["jawContourLine2"][2])
-    drawArrow(clone, jawContourLine2Point1, jawContourLine2Point2)
-    addText(distance_mapping, jawContourLine2Point1,
-            jawContourLine2Point2, "jawContourLine2")
-
-    jaw_contour_spread_width_2 = findDistance(extractCoordinates(
-        results, keypoints_mapping["jawContourLine2"][0]), extractCoordinates(results, keypoints_mapping["jawContourLine2"][2]))
-    new_distance_dict["jaw_contour_spread_width_2"] = jaw_contour_spread_width_2
-
-    # jawContour Line 3
-    jawContourLine3Point1 = extractCoordinates(
-        results, keypoints_mapping["jawContourLine3"][0])
-    jawContourLine3Point2 = extractCoordinates(
-        results, keypoints_mapping["jawContourLine3"][2])
-    drawArrow(clone, jawContourLine3Point1, jawContourLine3Point2)
-    addText(distance_mapping, jawContourLine3Point1,
-            jawContourLine3Point2, "jawContourLine3")
-    jaw_contour_spread_width_3 = findDistance(extractCoordinates(
-        results, keypoints_mapping["jawContourLine3"][0]), extractCoordinates(results, keypoints_mapping["jawContourLine3"][2]))
-    new_distance_dict["jaw_contour_spread_width_3"] = jaw_contour_spread_width_3
 
     # left and right inner eye
     drawArrowRed(clone, extractCoordinates(results, keypoints_mapping["left_eye"][0]), extractCoordinates(
@@ -374,7 +344,7 @@ def main(image):
     drawCircle(clone, right_ear)
     drawCircle(clone, left_ear)
     drawArrow(clone, right_ear, left_ear)
-    addText(distance_mapping, right_ear, left_ear, "ear_ear_distance")
+
     ear_ear_distance = findDistance(right_ear, left_ear)
     ear_ear_angle = findAngle(right_ear, left_ear)
     distance_dict["ear_to_ear_distance"] = ear_ear_distance
@@ -406,7 +376,7 @@ def main(image):
     drawCircle(clone, right_eye)
     drawCircle(clone, left_eye)
     drawArrow(clone, right_eye, left_eye)
-    addText(distance_mapping, right_eye, left_eye, "eye_eye_distance")
+ 
     eye_eye_distance = findDistance(right_eye, left_eye)
     eye_eye_angle = findAngle(right_eye, left_eye)
     distance_dict["eye_to_eye_distance"] = eye_eye_distance
@@ -423,10 +393,10 @@ def main(image):
     drawCircle(clone, center_eyebrow)
     drawCircle(clone, chin)
     drawArrow(clone, center_eyebrow, chin)
-    addText(distance_mapping, center_eyebrow, chin, "eyebrow_chin_distance")
+ 
     drawArrow(z_img,center_eyebrow,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
     Zangle(z_img,start2,center_eyebrow,5)
-    addText(z_img,start2,center_eyebrow,"black")
+    addText(z_img,center_eyebrow,start2,"black")
     drawArrow(z_img,right_eye_3,[right_eye_3[0],chin[1]])
     addText(z_img,right_eye_3,[right_eye_3[0],chin[1]],"lime")
     chin_ratio1([right_eye_3[0],chin[1]],chin,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
@@ -455,7 +425,7 @@ def main(image):
     drawCircle(clone, right_mouth)
     drawCircle(clone, left_mouth)
     drawArrow(clone, right_mouth, left_mouth)
-    addText(distance_mapping, left_mouth, right_mouth, "mouth_distance")
+
     right_left_mouth_distance = findDistance(right_mouth, left_mouth)
     right_left_mouth_angle = findAngle(right_mouth, left_mouth)
     distance_dict["right_left_mouth_distance"] = right_left_mouth_distance
@@ -469,8 +439,7 @@ def main(image):
     drawCircle(clone, right_virtualline)
     drawCircle(clone, left_virtualline)
     drawArrow(clone, right_virtualline, left_virtualline)
-    addText(distance_mapping, left_virtualline,
-            right_virtualline, "virtualline_distance")
+ 
     virtualline_distance = findDistance(right_virtualline, left_virtualline)
     virtualline_angle = findAngle(right_virtualline, left_virtualline)
     distance_dict["virtualline_distance"] = virtualline_distance
@@ -533,7 +502,7 @@ def main(image):
         results, keypoints_mapping["upper_head"][1])
     upperhead_distance = findDistance(upperhead_1, upperhead_2)
     upperhead_angle = findAngle(upperhead_1, upperhead_2)
-    addText(distance_mapping, upperhead_1, upperhead_2, "upperhead_distance")
+
     distance_dict["upperhead_distance"] = upperhead_distance
     angle_dict["upperhead_angle"] = upperhead_angle
 
@@ -544,7 +513,7 @@ def main(image):
         results, keypoints_mapping["middle_head"][1])
     middlehead_distance = findDistance(middlehead_1, middlehead_2)
     middlehead_angle = findAngle(middlehead_1, middlehead_2)
-    addText(distance_mapping, middlehead_1,middlehead_2, "middlehead_distance")
+
     
     distance_dict["middlehead_distance"] = middlehead_distance
     angle_dict["middlehead_angle"] = middlehead_angle
@@ -556,7 +525,7 @@ def main(image):
         results, keypoints_mapping["bottom_head"][1])
     bottomhead_distance = findDistance(bottomhead_1, bottomhead_2)
     bottomhead_angle = findAngle(bottomhead_1, bottomhead_2)
-    # addText(distance_mapping,bottomhead_1, bottomhead_2,"bottomhead_distance")
+
     distance_dict["bottomhead_distance"] = bottomhead_distance
     angle_dict["bottomhead_angle"] = bottomhead_angle
 
@@ -572,7 +541,7 @@ def main(image):
         results, keypoints_mapping["right_ear_to_nose"][1])
     rightear_to_nose_distance = findDistance(right_ear, right_nose)
     distance_dict["rightear_to_nose_distance"] = rightear_to_nose_distance
-    addText(distance_mapping, right_ear, right_nose, "right_ear_nose_distance")
+   
     Zangle(z_img,right_nose,right_ear,2)
     addText(z_img,right_nose,right_ear,"red")
     
@@ -589,7 +558,7 @@ def main(image):
     left_nose = extractCoordinates(
         results, keypoints_mapping["left_ear_to_nose"][1])
     leftear_to_nose_distance = findDistance(left_ear, left_nose)
-    addText(distance_mapping, left_ear, left_nose, "left_ear_nose_distance")
+
     #Zangle(z_img,left_ear,left_nose)
     distance_dict["leftear_to_nose_distance"] = leftear_to_nose_distance
     distance_dict["left_ear_nose_distance"] = left_ear_nose_distance
@@ -690,16 +659,6 @@ elif app_mode == "Project Demo":
             image_1 = cv2.cvtColor(image_1, cv2.COLOR_RGBA2RGB)
         
 
-    # functions for image 2
-    # if image_2 is not None:
-    #     image_2 = skimage.io.imread(image_2)
-
-    #     # optimizing the channels of the image to three channels
-    #     if image_2.shape[2] > 3:
-    #         image_2 = cv2.cvtColor(image_2, cv2.COLOR_RGBA2RGB)
-    #     if len(image_2.shape) == 2:
-    #         image_2 = cv2.cvtColor(image_2, cv2.COLOR_GRAY2RGB)
-
     # option select dropdown for implementing the image results
     #options_selected = st.sidebar.multiselect('Which result you want to get', [
     #                                          "Keypoints", "Characteristics", "Distance", "Angle", "Mouth Position", "Eyes Position", "Head Position", "Face Position", "New Results", "Distance Labels","Z Angle"])
@@ -741,20 +700,6 @@ elif app_mode == "Project Demo":
             if "Keypoints" in options_selected:
                 col[0].image(keypoints, caption='Image 1 with Keypoints')
 
-            # # showing the image with characteristics
-            # if "Characteristics" in options_selected:
-            #     col[0].image(clone, caption="Characteristics of image 1")
-
-            # # showing the distance graph
-            # if "Distance" in options_selected:
-            #     st.subheader("The distance between key points in image 1")
-            #     st.write("All the distances are in pixel")
-            #     df = pd.DataFrame(distance_dict, index=["distance"])
-            #     csv=df.to_csv('results_1.csv', mode='a')
-            #     df = df.T
-            #     st.area_chart(df)
-            #     csv = df.to_csv(index=False)
-
             #showing Z Angle
             st.write("All the angles are in degree")
             title1 = '<p style="font-family:Courier; color:Red;">Z Angle is the angle between RED LINES</p>'
@@ -772,8 +717,8 @@ elif app_mode == "Project Demo":
                 st.markdown(title4, unsafe_allow_html=True)
                 st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
                 st.markdown(title5, unsafe_allow_html=True)
-                st.text((chin_ratio2[0]))
-                st.text(chin_ratio2[1])
+                st.markdown((chin_ratio2[0]))
+                st.markdown(chin_ratio2[1])
                     
                   
                 
@@ -783,173 +728,12 @@ elif app_mode == "Project Demo":
                 #st.write("Z Angle is",str(zangle_list[4]-zangle_list[1]))          
                 #st.write(" ",)
                 #st.write("")    
-                
-                #st.balloons()
-            # # showing the angle graph
-            # if "Angle" in options_selected:
-            #     st.subheader("The important angles of image 1")
-            #     st.write("All the angles are in degree")
-            #     df = pd.DataFrame(angle_dict, index=["angle"])
-            #     df.to_csv('results_1.csv', mode='a')
-            #     df = df.T
-            #     st.area_chart(df)
-
-            # # results for mouth opening
-            # if ("Mouth Position" in options_selected) and image_2 is None:
-            #     st.subheader(
-            #         "Please upload the second image also, for getting results.")
-
-            # # results for eye position
-            # if ("Eyes Position" in options_selected) and image_2 is None:
-            #     st.subheader(
-            #         "Please upload the second image also, for getting results.")
-
-            # # results for head position
-            # if ("Head Position" in options_selected) and image_2 is None:
-            #     st.subheader(
-            #         "Please upload the second image also, for getting results.")
-
-            # # results for face position
-            # if ("Face Position" in options_selected) and image_2 is None:
-            #     st.subheader(
-            #         "Please upload the second image also, for getting results.")
-
-            # # showing the new distance graph
-            # if "New Results" in options_selected:
-            #     st.subheader("The new distances in image 1")
-            #     st.write("All the distances are in pixel")
-            #     df = pd.DataFrame(new_distance_dict, index=["distance"])
-            #     df.to_csv('results_1.csv', mode='a')
-            #     df = df.T
-            #     st.area_chart(df)
-            # if "Distance Labels" in options_selected:
-            #     col[0].image(distance_mapping, caption="Distance of image 1")
 
         # if no face is detected then show the error
         else:
             st.error("No face detected in image 1")
 
-    # second image functions
-    # if image_2 is not None:
-
-    #     # getting the face detection results
-    #     with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5) as face_detection:
-    #         results = face_detection.process(image_2)
-
-    #     # if image 2 contains a face
-    #     if results.detections:
-    #         distance_dict_1, angle_dict_1, clone, z_img,  distance_mapping_1, keypoints, new_distance_dict_1 = main(
-    #             image_2)
-    #         emotion_image = image_2
-
-    #         # showing the keypoints
-    #         if "Keypoints" in options_selected:
-    #             col[1].image(keypoints, caption='Image 2 with Keypoints')
-
-            # # showing the characteristics
-            # if "Characteristics" in options_selected:
-            #     col[1].image(clone, caption="Characteristics of image 2")
-
-            # # showing the distance graph
-            # if "Distance" in options_selected:
-            #     st.subheader("The distance between key points of image 2")
-            #     st.write("All the distances are in pixel")
-            #     df = pd.DataFrame(distance_dict_1, index=["distance"])
-            #     df = df.T
-            #     st.area_chart(df)
-
-            # # showing the angle graph
-            # if "Angle" in options_selected:
-            #     st.subheader("The important angles of image 2")
-            #     st.write("All the angles are in degree")
-            #     df = pd.DataFrame(angle_dict, index=["angle"])
-            #     df = df.T
-            #     st.area_chart(df)
-
-            # results for mouth opening
-            # if "Mouth Position" in options_selected and image_1 is not None:
-            #     if ((distance_dict["lip_to_lip_distance"]) < (distance_dict_1["lip_to_lip_distance"])):
-            #         st.subheader(
-            #             "Mouth is open in second image with respect to image 1")
-            #     elif((distance_dict["lip_to_lip_distance"]) > (distance_dict_1["lip_to_lip_distance"])):
-            #         st.subheader(
-            #             "Mouth is closed in second image with respect to image 1")
-            #     else:
-            #         st.subheader("Error 404: No changes found!")
-                    
-
-            # # results for eye position
-            # if "Eyes Position" in options_selected and image_1 is not None:
-            #     x = (distance_dict["righteye_to_righteye_distance"] +
-            #          distance_dict["lefteye_to_lefteye_distance"])
-            #     y = distance_dict_1["righteye_to_righteye_distance"] + \
-            #         distance_dict_1["lefteye_to_lefteye_distance"]
-            #     if (x < y):
-            #         st.subheader(
-            #             "Eyes are open in second image with respect to image 1")
-            #     else:
-            #         st.subheader(
-            #             "Eyes are closed in second image with respect to image 1")
-
-            # # results for head position
-            # if "Head Position" in options_selected and image_1 is not None:
-            #     a = (distance_dict["rightear_to_nose_distance"]
-            #          ) / (distance_dict["leftear_to_nose_distance"])
-            #     b = (distance_dict_1["rightear_to_nose_distance"]
-            #          ) / (distance_dict_1["leftear_to_nose_distance"])
-
-            #     if(b > a):
-            #         st.subheader(
-            #             "Face is turned to left in second image with respect to image 1")
-            #     elif(a > b):
-            #         st.subheader(
-            #             "Face is turned to right in second image with respect to image 1")
-            #     else:
-            #         st.subheader(
-            #             "The head is in same position in second image with respect to image 1")
-
-            # # results for the face position
-            # if "Face Position" in options_selected and image_1 is not None:
-            #     c = (distance_dict["head_distance"]) / \
-            #         (distance_dict["bottomhead_distance"])
-            #     d = (distance_dict_1["head_distance"]) / \
-            #         (distance_dict_1["bottomhead_distance"])
-
-            #     if(c > d):
-            #         st.subheader(
-            #             "Face is upwards in second image with respect to image 1")
-            #     elif(d > c):
-            #         st.subheader(
-            #             "Face is downwards in second image with respect to image 1")
-            #     else:
-            #         st.subheader(
-            #             "The face is in same position in second image with respect to image 1")
-
-            #     if(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) > 6):
-            #         st.subheader(
-            #             "The Face has tilted to right in second image with respect to image 1")
-            #     elif(((angle_dict["vertical_angle"])-(angle_dict_1["vertical_angle"])) < -6):
-            #         st.subheader(
-            #             "The Face has tilted to left in second image with respect to image 1")
-            #     else:
-            #         st.subheader(
-            #             "No major change in the tilting of face in second image with respect to image 1")
-
-            # # showing the new distance graph
-            # if "New Results" in options_selected:
-            #     st.subheader("The new distances in image 2")
-            #     st.write("All the distances are in pixel")
-            #     df = pd.DataFrame(new_distance_dict_1, index=["distance"])
-            #     df = df.T
-            #     st.area_chart(df)
-
-            # if "Distance Mapping" in options_selected:
-            #     col[1].image(distance_mapping_1, caption='Distance Mapping')
-
-        # if no face is found in image 2 then show the error
-        # else:
-        #     st.error("No face detected in image 2")
-
+   
 # project details page
 elif app_mode == "Project Details":
     st.subheader(
