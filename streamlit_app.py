@@ -16,12 +16,12 @@ imageSize = (1024, 1024)
 distance_label = {"jawContourLine2": 1,
                   "jawContourLine3": 2, "ear_ear_distance": 3, "eye_eye_distance": 4, "eyebrow_chin_distance": 5,
                   "mouth_distance": 6, "virtualline_distance": 7, "upperhead_distance": 8, "middlehead_distance": 9,
-                  "right_ear_nose_distance": 10, "left_ear_nose_distance": 11
+                  "right_ear_nose_distance": 10, "left_ear_nose_distance": 11,"blue":12,"black":13,"red":14,"lime":15,"redd":16
                   }
 
 #dictionary for colours                  
-colour_dict = {"1": (245, 30, 30), "2": (0, 128, 0), "3": (255, 255, 51), "4": (102, 51, 255), "5": (255,0,127), 
-"6": (0, 255, 128), "7": (0,0,0), "8":(102, 204, 51), "9": (255, 255, 255), "10": (153,0,153), "11":(255, 128, 0)
+colour_dict = {"1": (0, 0, 255), "2": (0, 128, 0), "3": (255, 255, 51), "4": (102, 51, 255), "5": (255,0,127),  
+"6": (0, 255, 128), "7": (0,0,0), "8":(102, 204, 51), "9": (255, 255, 255), "10": (153,0,153), "11":(255, 128, 0),"12": (0,0,255),"13":(0,0,0),"14":(128,0,0),"15":(0, 110, 0),"16":(128,0,0)
                }
 
 
@@ -99,14 +99,14 @@ chin_ratio2=[]
 def chin_ratio1(a,b,c):
     if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)==0.50):
         
-        chin_ratio2.append("-Tip of chin is at 1/2 times the distance between pupil perpendicular and head perpendicular line")
+        chin_ratio2.append("Tip of chin is at 1/2 times the distance between pupil perpendicular and head perpendicular line")
     if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)<0.50):
-        f="-Tip of chin lies at the left of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(0.50-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2),2))+" times the distance between the lines"
+        f="Tip of chin lies at the left of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(0.50-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2),2))+" times the distance between the lines"
     
         chin_ratio2.append(f)
 
     if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),1)>0.50):
-        g="-Tip of chin lies at the right of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.50,2))+" times the distance between the lines"
+        g="Tip of chin lies at the right of midpoint of pupil perpendicular and head perpendicular line by- "+ str(round(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.50,2))+" times the distance between the lines"
         chin_ratio2.append(g)
 
 def lip_ratio1(a,b,c):
@@ -114,11 +114,11 @@ def lip_ratio1(a,b,c):
 
         chin_ratio2.append("-Lower lip line is at 1/3 times the distance between pupil perpendicular and head perpendicular line")
     if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)<0.33):
-        h="-Lower lip line lies at the left of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(0.33-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2))+" times the distance between the lines"
+        h="Lower lip line lies at the left of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(0.33-round(abs(a[0]-b[0])/abs(a[0]-c[0]),2))+" times the distance between the lines"
         chin_ratio2.append(h)
 
     if(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)>0.33):
-        i="-Lower lip line lies at the right of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.33)+" times the distance between the lines"
+        i="Lower lip line lies at the right of 1/3rd of pupil perpendicular and head perpendicular line point by- "+ str(round(abs(a[0]-b[0])/abs(a[0]-c[0]),2)-0.33)+" times the distance between the lines"
         chin_ratio2.append(i)
 
     
@@ -186,11 +186,14 @@ def addText(image, start, end, s):
         x_coordinate = int(start[0])
         y_coordinate = int((start[1] + end[1])/2)
         y_coordinate += 30
+    thickness = int((imageSize[1])*(0.001))
+    if thickness == 0:
+        thickness += 1
 
     elif(s == "right_ear_nose_distance"):
         y_coordinate = y_coordinate + 30
     cv2.putText(image, a, (x_coordinate, y_coordinate),
-                cv2.FONT_HERSHEY_SIMPLEX, 2, colour_dict[a], 2, cv2.LINE_AA)
+                cv2.FONT_HERSHEY_SIMPLEX, thickness, colour_dict[a], 2, cv2.LINE_AA)
 
 # The main function which gives us the complete results
 
@@ -323,7 +326,7 @@ def main(image):
 
     # Vertical lines
 
-    # Center Contour1 to chin
+    # Center Contour1 to chinaddText
     # drawArrowRed(clone, extractCoordinates(results,keypoints_mapping["vertical_line_more"][6]), extractCoordinates(results,keypoints_mapping["vertical_line_more"][27]))
 
     # nose bottom to chin
@@ -337,6 +340,8 @@ def main(image):
     Zangle(z_img,start1,start2,1)
     Zangle(z_img,start1,end1,2)
     Zangle(z_img,start2,end1,1)
+    addText(z_img,start2,end1,"blue")
+    addText(z_img,end1,start1,"redd")
     
 
     new_distance_dict["nose_bottom_to_chin"] = nose_bottom_to_chin
@@ -421,7 +426,9 @@ def main(image):
     addText(distance_mapping, center_eyebrow, chin, "eyebrow_chin_distance")
     drawArrow(z_img,center_eyebrow,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
     Zangle(z_img,start2,center_eyebrow,5)
+    addText(z_img,start2,center_eyebrow,"black")
     drawArrow(z_img,right_eye_3,[right_eye_3[0],chin[1]])
+    addText(z_img,right_eye_3,[right_eye_3[0],chin[1]],"lime")
     chin_ratio1([right_eye_3[0],chin[1]],chin,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
 
 
@@ -567,6 +574,8 @@ def main(image):
     distance_dict["rightear_to_nose_distance"] = rightear_to_nose_distance
     addText(distance_mapping, right_ear, right_nose, "right_ear_nose_distance")
     Zangle(z_img,right_nose,right_ear,2)
+    addText(z_img,right_nose,right_ear,"red")
+    
     distance_dict["right_ear_nose_distance"] = right_ear_nose_distance
     angle_dict["right_ear_nose_angle"] = right_ear_nose_angle
 
@@ -693,9 +702,9 @@ elif app_mode == "Project Demo":
 
     # option select dropdown for implementing the image results
     #options_selected = st.sidebar.multiselect('Which result you want to get', [
-    #                                          "Keypoints", "Characteristics", "Distance", "Angle", "Mouth Position", "Eyes Position", "Head Position", "Face Position", "New Results", "Distance Labels","z angle"])
+    #                                          "Keypoints", "Characteristics", "Distance", "Angle", "Mouth Position", "Eyes Position", "Head Position", "Face Position", "New Results", "Distance Labels","Z Angle"])
     options_selected = st.sidebar.multiselect('Which result you want to get', [
-                                              "Keypoints", "z angle"])
+                                              "Keypoints", "Z Angle"])
     # declearing the two columns of the complete screen
     cols = st.columns(2)
 
@@ -746,32 +755,32 @@ elif app_mode == "Project Demo":
             #     st.area_chart(df)
             #     csv = df.to_csv(index=False)
 
-            #showing z angle
+            #showing Z Angle
             st.write("All the angles are in degree")
-            title1 = '<p style="font-family:Courier; color:Red;">-Z angle is the angle between RED LINES</p>'
-            title2 = '<p style="font-family:Courier; color:Green;">-GREEN LINES are the perpendicular lines from PUPIL, CENTER OF HEAD and LOWER LIP</p>'
-            title3 = '<p style="font-family:Courier; color:Gray;">-Z angle is :</p>'
-            title4 = '<p style="font-family:Courier; color:Blue;">-Angle between BLUE LINES is :</p>'
-            title5 = '<p style="font-family:Courier; color:Gray;">-BLACK LINE is the line between subnasal point and center of head</p>'
-            if "z angle" in options_selected:
-                with st.expander("INFORMATION :",expanded=False):
+            title1 = '<p style="font-family:Courier; color:Red;">Z Angle is the angle between RED LINES</p>'
+            title2 = '<p style="font-family:Courier; color:Green;">GREEN LINES are the perpendicular lines from PUPIL, CENTER OF HEAD and LOWER LIP</p>'
+            title3 = '<p style="font-family:Courier; color:Gray;">Z Angle is :</p>'
+            title4 = '<p style="font-family:Courier; color:Blue;">Angle between BLUE LINES is:</p>'
+            title5 = '<p style="font-family:Courier; color:Gray;">BLACK LINE is the line between subnasal point and center of head</p>'
+            if "Z Angle" in options_selected:
+                #with st.expander("INFORMATION :",expanded=False):
 
-                    st.markdown(title1, unsafe_allow_html=True)
-                    st.markdown(title2, unsafe_allow_html=True)
-                    st.markdown(title3, unsafe_allow_html=True)
-                    st.info(str(round(zangle_list[4]-zangle_list[1],2)))
-                    st.markdown(title4, unsafe_allow_html=True)
-                    st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
-                    st.markdown(title5, unsafe_allow_html=True)
-                    st.text ((chin_ratio2[0]))
-                    st.text(chin_ratio2[1])
+                st.markdown(title1, unsafe_allow_html=True)
+                st.markdown(title2, unsafe_allow_html=True)
+                st.markdown(title3, unsafe_allow_html=True)
+                st.info(str(round(zangle_list[4]-zangle_list[1],2)))
+                st.markdown(title4, unsafe_allow_html=True)
+                st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
+                st.markdown(title5, unsafe_allow_html=True)
+                st.text((chin_ratio2[0]))
+                st.text(chin_ratio2[1])
                     
                   
                 
-                #st.write("Z angle is the angle between RED LINES")  
+                #st.write("Z Angle is the angle between RED LINES")  
                 #st.write("GREEN LINES are the perpendicular lines from PUPIL, CENTER OF HEAD and LOWER LIP")            
-                col[0].image(z_img, caption="Z angle of image 1")
-                #st.write("z angle is",str(zangle_list[4]-zangle_list[1]))          
+                col[0].image(z_img, caption="Z Angle of image 1")
+                #st.write("Z Angle is",str(zangle_list[4]-zangle_list[1]))          
                 #st.write(" ",)
                 #st.write("")    
                 
