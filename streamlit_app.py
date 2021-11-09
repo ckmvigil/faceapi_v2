@@ -243,13 +243,13 @@ def main(image):
                          "vertical_line_more": [10, 151, 9, 8, 168, 6, 197, 195, 5, 4, 1, 19, 94, 2, 164, 0, 11, 12, 13, 14, 15, 16, 17, 18, 200, 199, 175, 152]
                          }
 
-    # making copies of image for processing
-    clone = image.copy()
+
     keypoints = image.copy()
     distance_mapping = image.copy()
     z_img=image.copy()
     # distance storing dictionary
     distance_dict = {}
+
 
     # printing the key point using the drawcircle function
     for i in range(468):
@@ -264,13 +264,13 @@ def main(image):
         current = extractCoordinates(results, item)
         pts.append(current)
     pts = np.array(pts)
-    drawRedPolylines(clone, pts)
+  
     pts = []
     for item in keypoints_mapping["left_eye"]:
         current = extractCoordinates(results, item)
         pts.append(current)
     pts = np.array(pts)
-    drawRedPolylines(clone, pts)
+
 
     # the mouth
     pts = []
@@ -278,12 +278,11 @@ def main(image):
         current = extractCoordinates(results, item)
         pts.append(current)
     pts = np.array(pts)
-    drawRedPolylines(clone, pts)
+
 
 
     # left and right inner eye
-    drawArrowRed(clone, extractCoordinates(results, keypoints_mapping["left_eye"][0]), extractCoordinates(
-        results, keypoints_mapping["right_eye"][8]))
+    
     left_right_inner_eye_width = findDistance(extractCoordinates(
         results, keypoints_mapping["left_eye"][0]), extractCoordinates(results, keypoints_mapping["right_eye"][8]))
 
@@ -293,8 +292,7 @@ def main(image):
     # drawArrowRed(clone, extractCoordinates(results,keypoints_mapping["vertical_line_more"][6]), extractCoordinates(results,keypoints_mapping["vertical_line_more"][27]))
 
     # nose bottom to chin
-    drawArrowRed(clone, extractCoordinates(results, keypoints_mapping["vertical_line_more"][13]), extractCoordinates(
-        results, keypoints_mapping["vertical_line_more"][27]))
+   
     nose_bottom_to_chin = findDistance(extractCoordinates(results, keypoints_mapping["vertical_line_more"][13]), extractCoordinates(
         results, keypoints_mapping["vertical_line_more"][27]))
     start1=extractCoordinates(results, keypoints_mapping["vertical_line_more"][10])
@@ -304,9 +302,7 @@ def main(image):
     Zangle(z_img,start1,end1,2)
     Zangle(z_img,start2,end1,1)
     addText(z_img,start2,end1,"blue")
-    distance_dict["sub_nasal_point_to_chin_distance"] = findDistance(start2,end1)
     addText(z_img,end1,start1,"redd")
-    distance_dict["nose_tip_to_chin_distance"] = findDistance(start1,end1)
     
 
 # ---------------------------------------- second part ended -----------------------------------------
@@ -314,19 +310,11 @@ def main(image):
     # right and left ear implementations
     right_ear = extractCoordinates(results, keypoints_mapping["right_ear"])
     left_ear = extractCoordinates(results, keypoints_mapping["left_ear"])
-    drawCircle(clone, right_ear)
-    drawCircle(clone, left_ear)
-    drawArrow(clone, right_ear, left_ear)
+
 
     ear_ear_distance = findDistance(right_ear, left_ear)
     ear_ear_angle = findAngle(right_ear, left_ear)
-    
-    # Contour lines
-    drawLinePointSlope(clone, extractCoordinates(
-        results, keypoints_mapping["vertical_line_more"][13]), ear_ear_angle, ear_ear_distance*(0.4))
-    drawLinePointSlope(clone, extractCoordinates(
-        results, keypoints_mapping["vertical_line_more"][22]), ear_ear_angle, ear_ear_distance*(0.3))
-
+  
     # eye implementations
     right_eye_1 = extractCoordinates(
         results, keypoints_mapping["right_eye"][3])
@@ -344,9 +332,7 @@ def main(image):
                  4, (right_eye_1[1] + right_eye_2[1] + right_eye_3[1] + right_eye_4[1])//4]
     left_eye = [(left_eye_1[0] + left_eye_2[0] + left_eye_3[0] + left_eye_4[0]) //
                 4, (left_eye_1[1] + left_eye_2[1] + left_eye_3[1] + left_eye_4[1])//4]
-    drawCircle(clone, right_eye)
-    drawCircle(clone, left_eye)
-    drawArrow(clone, right_eye, left_eye)
+
  
     eye_eye_distance = findDistance(right_eye, left_eye)
     eye_eye_angle = findAngle(right_eye, left_eye)
@@ -359,17 +345,13 @@ def main(image):
     chin = extractCoordinates(results, keypoints_mapping["bottom_head"][1])
     center_eyebrow = [(right_eyebrow[0] + left_eyebrow[0]) //
                       2, (right_eyebrow[1] + left_eyebrow[1])//2]
-    drawCircle(clone, center_eyebrow)
-    drawCircle(clone, chin)
-    drawArrow(clone, center_eyebrow, chin)
+
  
     drawArrow(z_img,center_eyebrow,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
     Zangle(z_img,start2,center_eyebrow,5)
     addText(z_img,center_eyebrow,start2,"black")
-    distance_dict["center_eyebrow_to_sub_nasal_point"] = findDistance(center_eyebrow,start2)
     drawArrow(z_img,right_eye_3,[right_eye_3[0],chin[1]])
     addText(z_img,right_eye_3,[right_eye_3[0],chin[1]],"lime")
-    distance_dict["pupil_to_chin"] = findDistance(right_eye_3,[right_eye_3[0],chin[1]])
     chin_ratio1([right_eye_3[0],chin[1]],chin,[(right_eyebrow[0] + left_eyebrow[0])//2,chin[1]])
 
 
@@ -378,38 +360,20 @@ def main(image):
     
 
     # jawline implementations
-    pts = []
-    for item in keypoints_mapping["jaw_line"]:
-        current = extractCoordinates(results, item)
-        pts.append(current)
-    pts = np.array(pts)
-    drawPolylines(clone, pts)
-    jawline_distance = findDistance_poly(pts)
+ 
 
     # right mouth cornet to left mouth corner implementations
     right_mouth = extractCoordinates(
         results, keypoints_mapping["right_corner_of_mouth"])
     left_mouth = extractCoordinates(
         results, keypoints_mapping["left_corner_of_mouth"])
-    drawCircle(clone, right_mouth)
-    drawCircle(clone, left_mouth)
-    drawArrow(clone, right_mouth, left_mouth)
+
 
     right_left_mouth_distance = findDistance(right_mouth, left_mouth)
     right_left_mouth_angle = findAngle(right_mouth, left_mouth)
 
-    # virtual line implementations
-    y_added = int((5*clone.shape[1])/100)
-    x_added = int((10*clone.shape[1])/100)
-    right_virtualline = [right_ear[0]-x_added, chin[1]+y_added]
-    left_virtualline = [left_ear[0]+x_added, chin[1]+y_added]
-    drawCircle(clone, right_virtualline)
-    drawCircle(clone, left_virtualline)
-    drawArrow(clone, right_virtualline, left_virtualline)
+
  
-    virtualline_distance = findDistance(right_virtualline, left_virtualline)
-    virtualline_angle = findAngle(right_virtualline, left_virtualline)
-    #distance_dict["virtualline_distance"] = virtualline_distance
 
     # right eyeball implementations
     right_eye_1 = extractCoordinates(
@@ -418,7 +382,6 @@ def main(image):
         results, keypoints_mapping["right_eye"][4])
     right_eyeball_horizontal_distance = findDistance(right_eye_1, right_eye_2)
     right_eyeball_horizontal_angle = findAngle(right_eye_1, right_eye_2)
-    #distance_dict["right_eyeball_horizontal_distance"] = right_eyeball_horizontal_distance
     right_eye_3 = extractCoordinates(
         results, keypoints_mapping["right_eye"][3])
     right_eye_4 = extractCoordinates(
@@ -435,14 +398,12 @@ def main(image):
         center_right_eye_1, center_right_eye_2)
     right_eyeball_vertical_angle = findAngle(
         center_right_eye_1, center_right_eye_2)
-    distance_dict["right_eyeball_vertical_distance"] = right_eyeball_vertical_distance
 
     # left eyeball implementations
     left_eye_1 = extractCoordinates(results, keypoints_mapping["left_eye"][12])
     left_eye_2 = extractCoordinates(results, keypoints_mapping["left_eye"][4])
     left_eyeball_horizontal_distance = findDistance(left_eye_1, left_eye_2)
     left_eyeball_horizontal_angle = findAngle(left_eye_1, left_eye_2)
-    #distance_dict["left_eyeball_horizontal_distance"] = left_eyeball_horizontal_distance
     left_eye_3 = extractCoordinates(results, keypoints_mapping["left_eye"][3])
     left_eye_4 = extractCoordinates(results, keypoints_mapping["left_eye"][5])
     left_eye_5 = extractCoordinates(results, keypoints_mapping["left_eye"][11])
@@ -455,7 +416,6 @@ def main(image):
         center_left_eye_1, center_left_eye_2)
     left_eyeball_vertical_angle = findAngle(
         center_left_eye_1, center_left_eye_2)
-    #distance_dict["left_eyeball_vertical_distance"] = left_eyeball_vertical_distance
 
 
     # right ear to nose implementations
@@ -469,12 +429,9 @@ def main(image):
     right_nose = extractCoordinates(
         results, keypoints_mapping["right_ear_to_nose"][1])
     rightear_to_nose_distance = findDistance(right_ear, right_nose)
-    distance_dict["rightear_to_nose_distance"] = rightear_to_nose_distance
    
     Zangle(z_img,right_nose,right_ear,2)
     addText(z_img,right_nose,right_ear,"red")
-    distance_dict["right_ear_to_nose_tip"] = findDistance(right_nose,right_ear)
-    #distance_dict["right_ear_nose_distance"] = right_ear_nose_distance
 
     # left ear to nose implementations
     left_ear = extractCoordinates(
@@ -487,9 +444,6 @@ def main(image):
         results, keypoints_mapping["left_ear_to_nose"][1])
     leftear_to_nose_distance = findDistance(left_ear, left_nose)
 
-    #Zangle(z_img,left_ear,left_nose)
-    #distance_dict["leftear_to_nose_distance"] = leftear_to_nose_distance
-    distance_dict["left_ear_nose_distance"] = left_ear_nose_distance
 
     # upper lip to lower lip implementations
     top_lip = extractCoordinates(
@@ -509,7 +463,6 @@ def main(image):
     righteye_to_righteye_distance = findDistance(
         right_eye_top, right_eye_bottom)
     righteye_to_righteye_angle = findAngle(right_eye_top, right_eye_bottom)
-    #distance_dict["righteye_to_righteye_distance"] = righteye_to_righteye_distance
 
     # left eye implementations
     left_eye_top = extractCoordinates(
@@ -530,10 +483,16 @@ def main(image):
         results, keypoints_mapping["vertical_line"][1])
     vertical_distance = findDistance(head_1, head_2)
     vertical_angle = findAngle(head_1, head_2)
-    distance_dict["vertical_distance"] = vertical_distance
+
+    distance_dict["sub_nasal_point_to_chin_distance"] = findDistance(start2,end1)
+    distance_dict["center_eyebrow_to_sub_nasal_point"] = findDistance(center_eyebrow,start2)
+    distance_dict["right_ear_to_nose_tip"] = findDistance(right_nose,right_ear)    
+    distance_dict["pupil_to_chin"] = findDistance(right_eye_3,[right_eye_3[0],chin[1]])
+    distance_dict["nose_tip_to_chin_distance"] = findDistance(start1,end1)
+
 
     # returning all the results
-    return distance_dict, clone, distance_mapping,z_img, keypoints
+    return distance_dict, distance_mapping,z_img, keypoints
 
 # The main streamlit function
 
@@ -605,7 +564,7 @@ elif app_mode == "Project Demo":
         # st.write(results.detections)
         # functions for image 1 if the face is founded
         if results.detections:
-            distance_dict, clone, distance_mapping, z_img ,keypoints = main(
+            distance_dict, distance_mapping, z_img ,keypoints = main(
                 image_1)
             emotion_image = image_1
 
@@ -637,16 +596,14 @@ elif app_mode == "Project Demo":
                      
                 col[0].image(z_img, caption="Z Angle of image 1")
                 st.write("Distances")
-                df = pd.DataFrame(distance_dict, index=["Distance"])
-                df = df.T
-                st.write()
-                st.table(df)
-                st.write("Color Labels")
-                df = pd.DataFrame(distance_label, index=["Label"])
-                df = df.T
-                st.write()
-                st.table(df)
+                key_values = distance_label.values()
+                key_list = distance_dict.keys()
+                distance_dict_list = distance_dict.values()
+                distance_label_list = distance_label.keys()
+                label_table = pd.DataFrame(list(zip(key_list,distance_dict_list,distance_label_list,key_values)))
+                st.table(label_table)
 
+    
                 df = pd.DataFrame(colour_dict, index=["Red","Green", "Blue"])
                 st.write("Label Color Codes")
                 st.table(df)
