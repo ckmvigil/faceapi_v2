@@ -675,10 +675,11 @@ elif app_mode == "Project Demo":
         image_1 = skimage.io.imread(image_1)
 
         # optimizing the channels of the image to three channels
-        if image_1.shape[2] > 3:
-            image_1 = cv2.cvtColor(image_1, cv2.COLOR_RGBA2RGB)
         if len(image_1.shape) == 2:
             image_1 = cv2.cvtColor(image_1, cv2.COLOR_GRAY2RGB)
+        if image_1.shape[2] > 3:
+            image_1 = cv2.cvtColor(image_1, cv2.COLOR_RGBA2RGB)
+        
 
     # functions for image 2
     # if image_2 is not None:
