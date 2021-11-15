@@ -62,6 +62,34 @@ def angle_trunc(a):
         a += math.pi * 2
     return a
 
+  # Keypoints mapping for faster results
+keypoints_mapping = {"right_ear": 234,
+                         "left_ear": 454,
+                         "right_eye": [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246],
+                         "left_eye": [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398],
+                         "jaw_line": [234, 93, 132, 58, 172, 136, 150, 149, 176, 148, 152, 377, 400, 378, 379, 365, 397, 288, 361, 323, 454],
+                         "upper_head": [10, 8],
+                         "middle_head": [8, 1],
+                         "bottom_head": [164, 152],
+                         "right_ear_to_nose": [234, 5],
+                         "nose_to_left_ear": [5, 454],
+                         "right_eyebrow": 107,
+                         "left_eyebrow": 336,
+                         "right_corner_of_mouth": 61,
+                         "left_corner_of_mouth": 291,
+                         "upper_lip_to_lower_lip": [0, 17],
+                         "right_eye_cord": [159, 145],
+                         "left_eye_cord": [386, 374],
+                         "head": [10, 1],
+                         "vertical_line": [10, 152],
+                         "right_ear_to_nose": [234, 5],
+                         "left_ear_to_nose": [5, 454],
+                         "mouth": [0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146, 61, 185, 40, 39, 37],
+                         "jawContourLine2": [132, 164, 361],
+                         "jawContourLine3": [172, 17, 397],
+                         "vertical_line_more": [10, 151, 9, 8, 168, 6, 197, 195, 5, 4, 1, 19, 94, 2, 164, 0, 11, 12, 13, 14, 15, 16, 17, 18, 200, 199, 175, 152]
+                         }
+
 # finding the angle between two points
 
 
@@ -72,20 +100,7 @@ def findAngle(start, end):
     deltaX = x2 - x1
     return math.degrees(angle_trunc(math.atan2(deltaY, deltaX)))
     
-# for calculating z angles
-zangle_list=[]
-def Zangle(image, start,end,k):
-    if(k==2):
-        cv2.arrowedLine(image, start, end,(128,0,0), 2)
-        cv2.arrowedLine(image, end, start,(128,0,0), 2) 
-    if(k==1):
-         cv2.arrowedLine(image, start, end,(0,0,255), 2)
-         cv2.arrowedLine(image, end, start,(0,0,255), 2)
-    if(k==5):
-         cv2.arrowedLine(image, start, end,(0,0,0), 2)
-         cv2.arrowedLine(image, end, start,(0,0,0), 2)
 
-    zangle_list.append(round(findAngle(start,end),2))
    
 # for finding chin ratio and lip ratio
 
@@ -206,7 +221,7 @@ def main(image):
         max_num_faces=3,
 
         # minimum confidence
-            min_detection_confidence=0.3) as face_mesh:
+            min_detection_confidence=0.1) as face_mesh:
 
         # update the image size
         global imageSize
@@ -215,33 +230,6 @@ def main(image):
         # Convert the BGR image to RGB before processing.
         results = face_mesh.process(image)
 
-    # Keypoints mapping for faster results
-    keypoints_mapping = {"right_ear": 234,
-                         "left_ear": 454,
-                         "right_eye": [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246],
-                         "left_eye": [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398],
-                         "jaw_line": [234, 93, 132, 58, 172, 136, 150, 149, 176, 148, 152, 377, 400, 378, 379, 365, 397, 288, 361, 323, 454],
-                         "upper_head": [10, 8],
-                         "middle_head": [8, 1],
-                         "bottom_head": [164, 152],
-                         "right_ear_to_nose": [234, 5],
-                         "nose_to_left_ear": [5, 454],
-                         "right_eyebrow": 107,
-                         "left_eyebrow": 336,
-                         "right_corner_of_mouth": 61,
-                         "left_corner_of_mouth": 291,
-                         "upper_lip_to_lower_lip": [0, 17],
-                         "right_eye_cord": [159, 145],
-                         "left_eye_cord": [386, 374],
-                         "head": [10, 1],
-                         "vertical_line": [10, 152],
-                         "right_ear_to_nose": [234, 5],
-                         "left_ear_to_nose": [5, 454],
-                         "mouth": [0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146, 61, 185, 40, 39, 37],
-                         "jawContourLine2": [132, 164, 361],
-                         "jawContourLine3": [172, 17, 397],
-                         "vertical_line_more": [10, 151, 9, 8, 168, 6, 197, 195, 5, 4, 1, 19, 94, 2, 164, 0, 11, 12, 13, 14, 15, 16, 17, 18, 200, 199, 175, 152]
-                         }
 
 
     keypoints = image.copy()
@@ -429,9 +417,23 @@ def main(image):
     right_nose = extractCoordinates(
         results, keypoints_mapping["right_ear_to_nose"][1])
     rightear_to_nose_distance = findDistance(right_ear, right_nose)
+    left_nose = extractCoordinates(
+        results, keypoints_mapping["left_ear_to_nose"][1])
    
-    Zangle(z_img,right_nose,right_ear,2)
-    addText(z_img,right_nose,right_ear,"red")
+    r_ear = extractCoordinates(results, keypoints_mapping["right_ear_to_nose"][0])
+    l_ear = extractCoordinates(results, keypoints_mapping["nose_to_left_ear"][0])
+
+    m=findDistance(right_nose,r_ear)
+    l=findDistance(left_nose,l_ear)
+    if(m<=l):
+        Zangle(z_img,left_nose,l_ear,2)
+        addText(z_img,right_nose,l_ear,"red")
+    else:
+        Zangle(z_img,right_nose,r_ear,2)
+        addText(z_img,right_nose,r_ear,"red")
+        
+    
+    
 
     # left ear to nose implementations
     left_ear = extractCoordinates(
@@ -493,7 +495,21 @@ def main(image):
 
     # returning all the results
     return distance_dict, distance_mapping,z_img, keypoints
+# for calculating z angles
+zangle_list=[]
+def Zangle(image, start,end,k):
+   
+    if(k==2):
+        cv2.arrowedLine(image, start, end,(128,0,0), 2)
+        cv2.arrowedLine(image, end, start,(128,0,0), 2) 
+    if(k==1):
+         cv2.arrowedLine(image, start, end,(0,0,255), 2)
+         cv2.arrowedLine(image, end, start,(0,0,255), 2)
+    if(k==5):
+         cv2.arrowedLine(image, start, end,(0,0,0), 2)
+         cv2.arrowedLine(image, end, start,(0,0,0), 2)
 
+    zangle_list.append(round(findAngle(start,end),2))
 # The main streamlit function
 
 # the side bar
@@ -558,7 +574,7 @@ elif app_mode == "Project Demo":
         # st.image(image_1, caption='Original Image')
 
         # running the face detection model for getting results
-        with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5) as face_detection:
+        with mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.1) as face_detection:
             results = face_detection.process(image_1)
 
         # st.write(results.detections)
@@ -585,13 +601,28 @@ elif app_mode == "Project Demo":
                 st.markdown(title1, unsafe_allow_html=True)
                 st.markdown(title2, unsafe_allow_html=True)
                 st.markdown(title3, unsafe_allow_html=True)
-                st.info(str(round(zangle_list[4]-zangle_list[1],2)))
+                if(round(zangle_list[4]-zangle_list[1],2)<=90.00):
+                    st.info(str(round(zangle_list[4]-zangle_list[1],2)))
+                else:
+                    st.info(str(round(180.00-zangle_list[4]+zangle_list[1],2)))
+                    
+               
+    
+        
+              
                 st.markdown(title4, unsafe_allow_html=True)
-                st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
+                if(round(zangle_list[0]-zangle_list[2]+180.00,2)>=90.00 and round(zangle_list[0]-zangle_list[2]+180.00,2)<=180.00):
+                    st.info(str(round(zangle_list[0]-zangle_list[2]+180.00,2)))
+                else:
+                     st.info(str(round(zangle_list[2]-zangle_list[0]+180.00,2)))
+               
+
+
                 st.markdown(title5, unsafe_allow_html=True)
                 st.markdown((chin_ratio2[0]))
                 st.markdown(chin_ratio2[1])
                 st.write("\n")
+
 
                      
                 col[0].image(z_img, caption="Z Angle of image 1")
