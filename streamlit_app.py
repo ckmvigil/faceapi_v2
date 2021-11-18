@@ -435,16 +435,16 @@ def main(image):
     if(m<=l):
         Zangle(z_img,[left_nose[0],left_nose[1]],l_ear,2)
         addText(z_img,[left_nose[0],left_nose[1]],l_ear,"red")
-        linedraw(z_img,left_nose,zangle_list[4],l+100)
+        linedraw(z_img,left_nose,zangle_list[4],l+(int(imageSize[0]*0.3)))
     else:
         Zangle(z_img,[right_nose[0],right_nose[1]],r_ear,2)
         addText(z_img,[right_nose[0],right_nose[1]],r_ear,"red")
-        linedraw(z_img,r_ear,180.00+zangle_list[4],m+100)
+        linedraw(z_img,r_ear,180.00+zangle_list[4],m+(int(imageSize[0]*0.3)))
 
     # z angle
     yy=findDistance(start1,end1)
     aa=zangle_list[1]+180.00
-    linedraw(z_img,end1,aa,yy+100)
+    linedraw(z_img,end1,aa,yy+(int(imageSize[0]*0.3)))
     
     
 
