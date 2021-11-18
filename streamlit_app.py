@@ -183,12 +183,19 @@ def drawLinePointSlope(image, point, angle, distance):
     cv2.arrowedLine(image, end, start, (255, 0, 0), 1)
 
 # Printing text on the line
+def linedraw(image,start,angle,length):
+    
+    x=int(round(start[0]+length * math.cos(angle*math.pi/180.00)))
+    y=int(round(start[1]+length * math.sin(angle*math.pi/180.00)))
+    end=[x,y]
+    cv2.line(image, start, end,(128,0,0), 2)
+
 
 
 def addText(image, start, end, s):
     a = distance_label[s]
     a = str(a)
-    drawdistlabel(image, start, end,a)
+  
     x_coordinate = int((start[0] + end[0])/(2.4))
     y_coordinate = int(start[1])
     if(s == "eyebrow_chin_distance"):
@@ -287,10 +294,10 @@ def main(image):
     start2=extractCoordinates(results, keypoints_mapping["vertical_line_more"][13])
     end1=extractCoordinates(results, keypoints_mapping["vertical_line_more"][26])
     Zangle(z_img,start1,start2,1)
-    Zangle(z_img,start1,end1,2)
+    Zangle(z_img,[start1[0],start1[1]],end1,2)
     Zangle(z_img,start2,end1,1)
     addText(z_img,start2,end1,"blue")
-    addText(z_img,end1,start1,"redd")
+    addText(z_img,end1,[start1[0],start1[1]],"redd")
     
 
 # ---------------------------------------- second part ended -----------------------------------------
@@ -426,12 +433,18 @@ def main(image):
     m=findDistance(right_nose,r_ear)
     l=findDistance(left_nose,l_ear)
     if(m<=l):
-        Zangle(z_img,left_nose,l_ear,2)
-        addText(z_img,right_nose,l_ear,"red")
+        Zangle(z_img,[left_nose[0],left_nose[1]],l_ear,2)
+        addText(z_img,[left_nose[0],left_nose[1]],l_ear,"red")
+        linedraw(z_img,left_nose,zangle_list[4],l+100)
     else:
-        Zangle(z_img,right_nose,r_ear,2)
-        addText(z_img,right_nose,r_ear,"red")
-        
+        Zangle(z_img,[right_nose[0],right_nose[1]],r_ear,2)
+        addText(z_img,[right_nose[0],right_nose[1]],r_ear,"red")
+        linedraw(z_img,r_ear,180.00+zangle_list[4],m+100)
+
+    # z angle
+    yy=findDistance(start1,end1)
+    aa=zangle_list[1]+180.00
+    linedraw(z_img,end1,aa,yy+100)
     
     
 
@@ -500,14 +513,13 @@ zangle_list=[]
 def Zangle(image, start,end,k):
    
     if(k==2):
-        cv2.arrowedLine(image, start, end,(128,0,0), 2)
-        cv2.arrowedLine(image, end, start,(128,0,0), 2) 
+      pass
     if(k==1):
-         cv2.arrowedLine(image, start, end,(0,0,255), 2)
-         cv2.arrowedLine(image, end, start,(0,0,255), 2)
+         cv2.line(image, start, end,(0,0,255), 2)
+         cv2.line(image, end, start,(0,0,255), 2)
     if(k==5):
-         cv2.arrowedLine(image, start, end,(0,0,0), 2)
-         cv2.arrowedLine(image, end, start,(0,0,0), 2)
+         cv2.line(image, start, end,(0,0,0), 2)
+         cv2.line(image, end, start,(0,0,0), 2)
 
     zangle_list.append(round(findAngle(start,end),2))
 # The main streamlit function
@@ -606,7 +618,9 @@ elif app_mode == "Project Demo":
                 else:
                     st.info(str(round(180.00-zangle_list[4]+zangle_list[1],2)))
                     
-               
+                st.write(zangle_list[1])
+                st.write(zangle_list[4])
+
     
         
               
